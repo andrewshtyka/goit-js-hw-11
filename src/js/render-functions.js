@@ -1,40 +1,46 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-// екземпляр SimpleLightbox для роботи з модальним вікном
-new SimpleLightbox('.some-element a', {
-  /* options */
-});
+let lightbox = null;
 
 export function createGallery(images) {
-  /*
-    Ця функція повинна:
-    - приймати масив images
-    - створювати HTML-розмітку для галереї
-    - додавати її в контейнер галереї
-    - викликати метод екземпляра SimpleLightbox refresh()
-    
-    Нічого не повертає.
-    */
+  const galleryResult = document.querySelector('.gallery');
+
+  const markup = images
+    .map(
+      element => `
+        <li class='gallery-item'>
+            <a href='${element.largeImageURL}'>
+                <img class='gallery-img' src='${element.webformatURL}' alt='${element.tags}'>
+                <ul class='gallery-item-info'>
+                    <li class='text-info'>Likes<span class='text-info-data'>${element.likes}</span></li>
+                    <li class='text-info'>Views<span class='text-info-data'>${element.views}</span></li>
+                    <li class='text-info'>Comments<span class='text-info-data'>${element.comments}</span></li>
+                    <li class='text-info'>Downloads<span class='text-info-data'>${element.downloads}</span></li>
+                </ul>
+            </a>
+        </li>
+    `
+    )
+    .join('');
+
+  galleryResult.innerHTML = markup;
+
+  if (!lightbox) {
+    lightbox = new SimpleLightbox('.gallery a', {});
+  } else {
+    lightbox.refresh();
+  }
 }
 
 export function clearGallery() {
-  /*
-    Ця функція нічого не приймає та повинна очищати вміст контейнера галереї.
-    Нічого не повертає.
-    */
+  document.querySelector('.gallery').innerHTML = '';
 }
 
 export function showLoader() {
-  /*
-    Ця функція нічого не приймає, повинна додавати клас для відображення лоадера.
-    Нічого не повертає.
-    */
+  document.querySelector('.loader')?.classList.remove('hidden');
 }
 
 export function hideLoader() {
-  /*
-    Ця функція нічого не приймає, повинна прибирати клас для відображення лоадера.
-    Нічого не повертає.
-    */
+  document.querySelector('.loader')?.classList.add('hidden');
 }
